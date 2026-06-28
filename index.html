@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HQRC Studio - Halftone QR Code Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 30, 49, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --primary-glow: #3b82f6;
+            --secondary-glow: #ec4899;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 15, 25, 0.8);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-area img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 0 4rem 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 30%, #93c5fd 70%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, var(--primary-glow) 0%, #2563eb 100%);
+            color: #fff;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.6);
+        }
+
+        .hero-image {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .phone-mockup {
+            width: 280px;
+            border-radius: 36px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            border: 6px solid #27272a;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-image::after {
+            content: '';
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, var(--secondary-glow) 0%, transparent 70%);
+            opacity: 0.3;
+            z-index: 1;
+            filter: blur(30px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Comparison Section */
+        .comparison {
+            padding: 6rem 0;
+            border-top: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.3);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .comparison-images {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .comparison-box {
+            text-align: center;
+        }
+
+        .comparison-box img {
+            width: 200px;
+            height: 200px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            background: #fff;
+            padding: 8px;
+        }
+
+        .comparison-box span {
+            display: block;
+            margin-top: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .comparison-box.hd img {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .comparison-box.hd span {
+            color: #60a5fa;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 6rem 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .pricing-card.popular {
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+            transform: scale(1.05);
+        }
+
+        .badge {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background: var(--primary-glow);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .plan-name {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2.5rem;
+            text-align: left;
+        }
+
+        .plan-features li {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .plan-features li::before {
+            content: '✓';
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 4rem 0 2rem 0;
+            background: rgba(11, 15, 25, 0.9);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+            }
+            .hero-text p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .btn-group {
+                justify-content: center;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            .pricing-card.popular {
+                transform: none;
+            }
+            .footer-grid {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-container">
+            <div class="logo-area">
+                <img src="logo.png" alt="HQRC Studio Logo">
+                <span class="brand-name">HQRC Studio</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a> &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+                <a href="#pricing">Pricing</a> &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+                <a href="privacy.html">Privacy Policy</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="container hero">
+        <div class="hero-text">
+            <h1>Turn Any Image into a Scannable Masterpiece</h1>
+            <p>Generate high-fidelity, artistic Halftone QR codes from your personal photos or brand logos. Fully offline, customizable, and ready for publication.</p>
+            <div class="btn-group">
+                <a href="#" class="btn-primary">
+                    <svg style="width: 24px; height: 24px; fill: currentColor;" viewBox="0 0 24 24">
+                        <path d="M5.23 21.5c-.2 0-.35-.05-.48-.15-.12-.1-.2-.25-.2-.45V3.1c0-.2.08-.35.2-.45.13-.1.28-.15.48-.15.15 0 .33.05.53.15L19.25 11c.22.12.33.29.33.5s-.11.38-.33.5L5.75 21.35c-.17.1-.34.15-.52.15z"/>
+                    </svg>
+                    Get it on Google Play
+                </a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="app_screenshot.png" alt="HQRC Studio Android App Screenshot" class="phone-mockup">
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="container features">
+        <h2 class="section-title">Why Choose HQRC Studio?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">🎨</span>
+                <h3>Artistic Halftone Engine</h3>
+                <p>Embeds scannable QR data seamlessly inside the brightness patterns of your images using advanced halftone blending algorithms.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🛡️</span>
+                <h3>100% Offline Processing</h3>
+                <p>Your privacy is absolute. All image rendering and QR calculations happen locally on your phone. Your photos are never uploaded.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">⚙️</span>
+                <h3>Custom Tuning Tools</h3>
+                <p>Fine-tune detail level, contrast, and sharpening filters to balance artistic aesthetic with instant scan reliability.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="comparison">
+        <div class="container comparison-grid">
+            <div>
+                <h2 style="font-size: 2.2rem; margin-bottom: 1.5rem;">Standard vs. HD Mode</h2>
+                <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">Upgrade to Pro to unlock HD rendering with double the dot resolution, producing incredibly crisp designs that scan effortlessly at distance.</p>
+            </div>
+            <div class="comparison-images">
+                <div class="comparison-box">
+                    <img src="result_standard.png" alt="Standard QR Code">
+                    <span>Standard Mode</span>
+                </div>
+                <div class="comparison-box hd">
+                    <img src="result_hd.png" alt="HD QR Code">
+                    <span>HD Pro Mode</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="container pricing">
+        <h2 class="section-title">Simple, Flexible Pricing</h2>
+        <div class="pricing-grid">
+            <!-- Free Plan -->
+            <div class="pricing-card">
+                <div>
+                    <div class="plan-name">Free Plan</div>
+                    <div class="plan-price">$0 <span>/ forever</span></div>
+                    <ul class="plan-features">
+                        <li>Standard resolution QR generation</li>
+                        <li>Local gallery saving</li>
+                        <li>Ad-supported</li>
+                    </ul>
+                </div>
+                <a href="#" class="btn-primary" style="background: transparent; border: 1px solid var(--border-color); color: #fff; box-shadow: none;">Download Now</a>
+            </div>
+
+            <!-- 24-Hour Pass -->
+            <div class="pricing-card popular">
+                <div class="badge">Popular</div>
+                <div>
+                    <div class="plan-name">24-Hour Pass</div>
+                    <div class="plan-price">$0.99 <span>/ one-time</span></div>
+                    <ul class="plan-features">
+                        <li>Unlimited HD rendering mode</li>
+                        <li>Completely ad-free experience</li>
+                        <li>Vivid Color output mode</li>
+                        <li>Scan optimization filter</li>
+                        <li>Valid for 24 full hours</li>
+                    </ul>
+                </div>
+                <a href="#" class="btn-primary">Unlock 24h Pass</a>
+            </div>
+
+            <!-- Monthly Subscription -->
+            <div class="pricing-card">
+                <div>
+                    <div class="plan-name">Monthly Pro</div>
+                    <div class="plan-price">$2.99 <span>/ month</span></div>
+                    <ul class="plan-features">
+                        <li>Unlimited HD rendering mode</li>
+                        <li>Completely ad-free experience</li>
+                        <li>Vivid Color output mode</li>
+                        <li>Scan optimization filter</li>
+                        <li>Automatic renewal, cancel anytime</li>
+                    </ul>
+                </div>
+                <a href="#" class="btn-primary" style="background: transparent; border: 1px solid var(--border-color); color: #fff; box-shadow: none;">Subscribe</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-grid">
+            <div class="logo-area">
+                <img src="logo.png" alt="HQRC Studio Logo" style="width: 32px; height: 32px;">
+                <span class="brand-name" style="font-size: 1.25rem;">HQRC Studio</span>
+            </div>
+            <div class="footer-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="privacy.html">Privacy Policy</a>
+            </div>
+        </div>
+        <div class="container copyright">
+            <p>&copy; 2026 HQRC Studio. All rights reserved. Google Play and the Google Play logo are trademarks of Google LLC.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
